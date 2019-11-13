@@ -17,6 +17,10 @@ echo ssh -i $EC2KEYNAME.pem ubuntu@$JUMPHOSTIP0
 echo when the ansible run is complete Juiceshop and Grafana should be available at
 echo Juice Shop http://$JUICESHOP0
 echo Grafana http://$GRAFANA0
+echo you can run the load test from the jumphost with the following:
+echo ./run-load.sh $JUICESHOP0 10
+echo and the attack with
+echo ./run-attack.sh http://$JUICESHOP0
 echo 
 echo
 echo '** AVAILABILITY ZONE 2 **'
@@ -27,3 +31,7 @@ echo ssh -i $EC2KEYNAME.pem ubuntu@$JUMPHOSTIP1
 echo when the ansible run is complete Juiceshop and Grafana should be available at
 echo Juice Shop http://$JUICESHOP1
 echo Grafana http://$GRAFANA1
+echo you can run the load test from the jumphost with the following:
+echo ./run-load.sh $JUICESHOP1 10
+echo and the attack with
+echo ./run-attack.sh http://$JUICESHOP1
