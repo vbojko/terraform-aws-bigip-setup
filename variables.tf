@@ -38,6 +38,10 @@ variable "internal_subnet_offset" {
   default = 20
 }
 
+variable "dockerhosts_per_subnet" {
+  default = 1
+}
+
 variable "ec2_key_name" {
 }
 

@@ -40,3 +40,7 @@ output "juiceshop_ip" {
 output "grafana_ip" {
   value = aws_eip.grafana[*].public_ip
 }
+
+output "dockerhost_ip" {
+  value = flatten(module.dockerhost.private_ip[*])
+}

@@ -19,7 +19,7 @@ module "dockerhost" {
   version = "~> 2.0"
 
   name           = format("%s-demo-dockerhost-%s", var.prefix, random_id.id.hex)
-  instance_count = length(var.azs)
+  instance_count = (length(var.azs) * var.dockerhosts_per_subnet)
 
   ami                         = data.aws_ami.latest-ubuntu-docker.id
   associate_public_ip_address = false
