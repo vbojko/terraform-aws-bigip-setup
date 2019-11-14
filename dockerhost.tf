@@ -59,6 +59,63 @@ module "dockerhost_sg" {
   ingress_rules       = ["ssh-tcp"]
   ingress_with_cidr_blocks = [
     {
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      description = "Master Node Inbound"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 6443
+      to_port     = 6443
+      protocol    = "tcp"
+      description = "Master Node Inbound"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 10250
+      to_port     = 10250
+      protocol    = "tcp"
+      description = "worker node health check port"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 30000
+      to_port     = 32767
+      protocol    = "tcp"
+      description = "external application consumers"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 8285
+      to_port     = 8285
+      protocol    = "udp"
+      description = "flannel backend"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 8472
+      to_port     = 8472
+      protocol    = "udp"
+      description = "flannel backend"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 179
+      to_port     = 179
+      protocol    = "tcp"
+      description = "calico BGP networking"
+      cidr_blocks = var.cidr
+    },
+    {
+      from_port   = 2379
+      to_port     = 2380
+      protocol    = "tcp"
+      description = "etcd inbound"
+      cidr_blocks = var.cidr
+    },
+
+    {
       from_port   = 3030
       to_port     = 3030
       protocol    = "tcp"
