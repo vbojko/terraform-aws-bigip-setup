@@ -31,6 +31,10 @@ module "jumphost" {
   vpc_security_group_ids      = [module.jumphost_sg.this_security_group_id]
   subnet_ids                  = module.vpc.public_subnets
 
+
+  # build user_data file from template
+  user_data = templatefile("${path.module}/jumphost.userdata.tmpl",{})
+
   # this box needs to know the ip address of the bigip and the juicebox host
   # it also needs to know the bigip username and password to use
 
@@ -61,7 +65,7 @@ module "jumphost_sg" {
       description = "Juiceshop ports"
       cidr_blocks = var.allowed_mgmt_cidr
     },
-     {
+    {
       from_port   = 3000
       to_port     = 3000
       protocol    = "tcp"
