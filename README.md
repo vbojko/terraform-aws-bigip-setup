@@ -11,6 +11,7 @@ You can choose to run this from your workstation or a container. Follow the inst
 - install inpsec https://www.inspec.io/downloads/
 - install locust https://docs.locust.io/en/stable/installation.html
 - install jq https://stedolan.github.io/jq/download/
+- if on a Windows workstation, install Putty for scp support https://putty.org
 
 # Using a Docker container
 The port 8089 is opened in order to use the gui of the locust load generating tool should you choose to use it.
