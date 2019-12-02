@@ -22,8 +22,8 @@ connect to jumphost at with
 scp -i key.pem f5uberdemo.pem ubuntu@1.2.3.4:~/key.pem
 ssh -i key.pem ubuntu@1.2.3.4
 when the ansible run is complete Juiceshop and Grafana should be available at
-Juice Shop http://1.2.3.4.147
-Grafana http://1.2.3.4.218
+Juice Shop http://1.2.3.147
+Grafana http://1.2.3.218
 you can run the load test from the jumphost with the following:
 ./run-load.sh 1.2.3.4 10
 and the attack with
@@ -56,23 +56,17 @@ $ ssh -i key.pem ubuntu@2.3.4.5
 ```bash
 $ sudo apt install python3-pip -y
 ```
-# get the kubespray repo
+# get kubespray
 ```bash
 $ git clone https://github.com/kubernetes-sigs/kubespray.git
 $ cd kubespray
-```
-# Install dependencies 
-```bash
 $ sudo pip3 install -r requirements.txt
 ```
-# Copy ``inventory/sample`` as ``inventory/mycluster``
-```bash
-$ cp -rfp inventory/sample inventory/mycluster
-```
 
-# Update Ansible inventory file with inventory builder
+# create Ansible inventory 
 using the list of ip addresses copied earlier, create a space delimited list and update the command below with that list before executing it
 ```bash
+$ cp -rfp inventory/sample inventory/mycluster
 $ declare -a IPS=(10.0.20.186 10.0.21.132 10.0.20.55 10.0.21.70 10.0.20.132 10.0.21.244 )
 $ CONFIG_FILE=inventory/mycluster/hosts.yml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 ```
@@ -88,7 +82,9 @@ $ vi group_vars/k8s-cluster/addons.yml
 ```
 find and make certain that ```local_volume_provisioner_enabled: true``` and ```cert_manager_enabled: true```
 
-# execute the ansible playbook to build the cluster
+Note: there are nginx ingress controller feature flags here in the addons.yml we may want to enable for a more comprehensive demo 
+
+# build the cluster
 It's time!
 ```bash
 $ ansible-playbook -i inventory/mycluster/hosts.yml cluster.yml -b -v --private-key=~/key.pem
@@ -110,7 +106,7 @@ $ kubectl apply -f https://k8s.io/examples/application/deployment.yaml
 
 $ kubectl describe deployment nginx-deployment
 ```
-keep describing the deployment until ```Available: true```
+keep ```describe``` 'g the deployment until ```Available: true```
 ```bash
 $ kubectl expose deployment/nginx-deployment --type="NodePort" --port 80
 
