@@ -113,7 +113,7 @@ module "bigip_mgmt_sg" {
   egress_rules       = ["all-all"]
 }
 
-data "aws_network_interface" "bar" {
+data "aws_network_interface" "bigip_public_nics" {
   count = length(module.bigip.public_nic_ids)
   id = module.bigip.public_nic_ids[count.index]
 }

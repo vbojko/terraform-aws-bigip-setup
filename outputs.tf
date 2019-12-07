@@ -30,7 +30,7 @@ output "ec2_key_name" {
 
 output "bigip_nic_info" {
   description = "detailed information about the public nics on the bigips "
-  value = data.aws_network_interface.bar
+  value = data.aws_network_interface.bigip_public_nics
 }
 
 output "juiceshop_ip" {
@@ -39,4 +39,17 @@ output "juiceshop_ip" {
 
 output "grafana_ip" {
   value = aws_eip.grafana[*].public_ip
+}
+
+output "failover_declaration" {
+  value = templatefile(
+      "${path.module}/failover_declaration.json",
+      {
+        failover_scope = var.cidr
+      }
+      )
+}
+
+output "something_else" {
+  value = local.failover_tag_value
 }

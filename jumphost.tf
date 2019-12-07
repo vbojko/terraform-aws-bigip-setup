@@ -95,10 +95,10 @@ resource "null_resource" "transfer" {
             ec2_key_name           = var.ec2_key_name
             ec2_username           = "ubuntu"
             log_pool               = cidrhost(cidrsubnet(var.cidr,8,count.index + var.internal_subnet_offset),250)
-            bigip_external_self_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),0) # the ip address that the bigip has on the public subnet
+            bigip_external_self_ip = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.application_offset["management"]) # the ip address that the bigip has on the public subnet
             bigip_internal_self_ip = join(",",element(module.bigip.private_addresses,count.index)) # the ip address that the bigip has on the private subnet
-            juiceshop_virtual_ip   = element(flatten(data.aws_network_interface.bar[count.index].private_ips),1)
-            grafana_virtual_ip     = element(flatten(data.aws_network_interface.bar[count.index].private_ips),2)
+            juiceshop_virtual_ip   = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.application_offset["juiceshop"])
+            grafana_virtual_ip     = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.application_offset["grafana"])
             appserver_gateway_ip   = cidrhost(cidrsubnet(var.cidr,8,count.index + var.internal_subnet_offset),1)
             appserver_guest_ip     = module.dockerhost.private_ip[count.index]
             appserver_host_ip      = module.jumphost.private_ip[count.index]   # the ip address that the jumphost has on the public subnet
@@ -117,25 +117,43 @@ resource "null_resource" "transfer" {
   }
 }
 
-
+locals {
+  failover_tag_label = "f5_cloud_failover_deployment"
+  failover_tag_value = join(", ",[
+      for nic in data.aws_network_interface.bigip_public_nics:
+      element(nic.private_ips,var.application_offset["juiceshop"])
+    ])
+}
 
 resource "aws_eip" "juiceshop" {
   count                     = length(var.azs)
   vpc                       = true
-  network_interface         = "${data.aws_network_interface.bar[count.index].id}"
-  associate_with_private_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),1)
+  network_interface         = "${data.aws_network_interface.bigip_public_nics[count.index].id}"
+  associate_with_private_ip = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.application_offset["juiceshop"])
   tags = {
     Name = format("%s-juiceshop-eip-%s%s", var.prefix, random_id.id.hex,count.index)
+    # tag required for failover extension support
+    # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
+    f5_cloud_failover_deployment  = join(", ",[
+      for nic in data.aws_network_interface.bigip_public_nics:
+      element(nic.private_ips,var.application_offset["juiceshop"])
+    ])
   }
+
 }
 
 resource "aws_eip" "grafana" {
   count                     = length(var.azs)
   vpc                       = true
-  network_interface         = "${data.aws_network_interface.bar[count.index].id}"
-  associate_with_private_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),2)
+  network_interface         = "${data.aws_network_interface.bigip_public_nics[count.index].id}"
+  associate_with_private_ip = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.application_offset["grafana"])
   tags = {
-    Name = format("%s-grafana-eip-%s%s", var.prefix, random_id.id.hex,count.index)
+    Name                          = format("%s-grafana-eip-%s%s", var.prefix, random_id.id.hex,count.index)
+    # tag required for failover extension support
+    # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
+    f5_cloud_failover_deployment  = join(", ",[
+      for nic in data.aws_network_interface.bigip_public_nics:
+      element(nic.private_ips,var.application_offset["grafana"])
+    ])
   }
-
 }
