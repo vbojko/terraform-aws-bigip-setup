@@ -37,7 +37,7 @@ variable "external_subnet_offset" {
 variable "internal_subnet_offset" {
   default = 20
 }
-variable "application_offset"{
+variable "applications"{
   type = "map"
   default = {
     management = 0

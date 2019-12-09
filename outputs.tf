@@ -46,10 +46,19 @@ output "failover_declaration" {
       "${path.module}/failover_declaration.json",
       {
         failover_scope = var.cidr
+        failover_label = "${var.prefix}mydeployment${random_id.id.hex}"
       }
       )
 }
 
-output "something_else" {
-  value = local.failover_tag_value
+# output "js_tags" {
+#   value = local.js_tags
+# }
+
+# output "gf_tags" {
+#   value = local.gf_tags
+# }
+
+output "tagsarray" {
+  value = local.failover_tags
 }
