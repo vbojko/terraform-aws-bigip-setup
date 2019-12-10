@@ -5,10 +5,10 @@ export BIGIPPASSWORD=`terraform output --json | jq -r '.bigip_password.value'`
 export EC2KEYNAME=`terraform output --json | jq -r '.ec2_key_name.value'`
 export JUMPHOSTIP0=`terraform output --json | jq -r '.jumphost_ip.value[0]'`
 export JUMPHOSTIP1=`terraform output --json | jq -r '.jumphost_ip.value[1]'`
-export JUICESHOP0=`terraform output --json | jq -r '.juiceshop_ip.value[0]'`
-export JUICESHOP1=`terraform output --json | jq -r '.juiceshop_ip.value[1]'`
-export GRAFANA0=`terraform output --json | jq -r '.grafana_ip.value[0]'`
-export GRAFANA1=`terraform output --json | jq -r '.grafana_ip.value[1]'`
+export JUICESHOP0=`terraform output --json | jq -r '.juiceshop_ip.value'`
+export JUICESHOP1=`terraform output --json | jq -r '.juiceshop_ip.value'`
+export GRAFANA0=`terraform output --json | jq -r '.grafana_ip.value'`
+export GRAFANA1=`terraform output --json | jq -r '.grafana_ip.value'`
 echo '** AVAILABILITY ZONE 1 **'
 echo connect to BIG-IP at https://$BIGIPHOST0:$BIGIPMGMTPORT with $BIGIPPASSWORD
 echo connect to jumphost at with
