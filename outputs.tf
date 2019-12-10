@@ -28,11 +28,6 @@ output "ec2_key_name" {
   value       = var.ec2_key_name
 }
 
-# output "bigip_nic_info" {
-#   description = "detailed information about the public nics on the bigips "
-#   value = data.aws_network_interface.bigip_public_nics
-# }
-
 output "juiceshop_ip" {
   value = module.bigip.application_public_ips[index(var.applications,"juiceshop")]
 }
@@ -40,13 +35,3 @@ output "juiceshop_ip" {
 output "grafana_ip" {
   value = module.bigip.application_public_ips[index(var.applications,"grafana")]
 }
-
-# output  "eips" {
-#   value = aws_eip.application_eips
-# }
-
-
-
-# output "tagsarray" {
-#   value = local.failover_tags
-# }
