@@ -43,3 +43,31 @@ module "vpc" {
 
 
 
+locals {
+  failover_tags = [
+    for num in range(length(var.applications)):
+    {
+      # tag required for failover extension support
+      # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
+      "VIPS" = join(", ",[
+          for nic in data.aws_network_interface.bigip_public_nics:
+          element(nic.private_ips,num)
+        ]),
+      "f5_cloud_failover_label" = "${var.prefix}-${var.applications[num]}-failover-deployment-${random_id.id.hex}"
+    }    
+  ]
+}
+
+
+resource "aws_eip" "application_eips" {
+  count                     = length(var.applications)
+  vpc                       = true
+  network_interface         = "${data.aws_network_interface.bigip_public_nics[0].id}"
+  associate_with_private_ip = element(
+    data.aws_network_interface.bigip_public_nics[0].private_ips,count.index
+  )
+  tags = merge(
+    local.failover_tags[count.index],
+    { Name = format("%s-%s-eip-%s-%s", var.prefix, var.applications[count.index],random_id.id.hex,count.index)}
+  )
+}

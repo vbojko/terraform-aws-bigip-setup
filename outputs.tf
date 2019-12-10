@@ -28,37 +28,36 @@ output "ec2_key_name" {
   value       = var.ec2_key_name
 }
 
-output "bigip_nic_info" {
-  description = "detailed information about the public nics on the bigips "
-  value = data.aws_network_interface.bigip_public_nics
-}
+# output "bigip_nic_info" {
+#   description = "detailed information about the public nics on the bigips "
+#   value = data.aws_network_interface.bigip_public_nics
+# }
 
 output "juiceshop_ip" {
-  value = aws_eip.juiceshop[*].public_ip
+  value = aws_eip.application_eips[index(var.applications,"juiceshop")].public_ip
 }
 
 output "grafana_ip" {
-  value = aws_eip.grafana[*].public_ip
+  value = aws_eip.application_eips[index(var.applications,"grafana")].public_ip
 }
+
+# output  "eips" {
+#   value = aws_eip.application_eips
+# }
 
 output "failover_declaration" {
   value = templatefile(
       "${path.module}/failover_declaration.json",
       {
-        failover_scope = var.cidr
-        failover_label = "${var.prefix}mydeployment${random_id.id.hex}"
+        failover_scope = var.cidr,
+        failover_label = join(",\n ",[
+          for apptag in local.failover_tags:
+          "'f5_cloud_failover_label': '${apptag["f5_cloud_failover_label"]}'"
+        ]),
       }
       )
 }
 
-# output "js_tags" {
-#   value = local.js_tags
+# output "tagsarray" {
+#   value = local.failover_tags
 # }
-
-# output "gf_tags" {
-#   value = local.gf_tags
-# }
-
-output "tagsarray" {
-  value = local.failover_tags
-}
