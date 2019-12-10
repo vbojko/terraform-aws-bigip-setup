@@ -29,10 +29,11 @@ module "bigip" {
 
 
 locals {
+    # create failover tags per application
     failover_tags = [
         for num in range(length(var.applications)):
         {
-        # tag required for failover extension support
+        # tags required for failover extension support
         # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
         "VIPS" = join(", ",[
             for nic in data.aws_network_interface.bigip_public_nics:

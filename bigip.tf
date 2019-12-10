@@ -37,7 +37,9 @@ module "bigip" {
   ec2_key_name                    = var.ec2_key_name
   ec2_instance_type               = "c4.xlarge"
   DO_URL                          = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm"
+  # pass a list of application names
   applications                    = var.applications
+  # environment identifier to avoid name collisions - random suggested
   randomid                        = random_id.id.hex
   failover_scope                  = var.cidr
 
