@@ -95,10 +95,10 @@ resource "null_resource" "transfer" {
             ec2_key_name           = var.ec2_key_name
             ec2_username           = "ubuntu"
             log_pool               = cidrhost(cidrsubnet(var.cidr,8,count.index + var.internal_subnet_offset),250)
-            bigip_external_self_ip = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.applications["management"]) # the ip address that the bigip has on the public subnet
+            bigip_external_self_ip = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),index(var.applications,"management")) # the ip address that the bigip has on the public subnet
             bigip_internal_self_ip = join(",",element(module.bigip.private_addresses,count.index)) # the ip address that the bigip has on the private subnet
-            juiceshop_virtual_ip   = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.applications["juiceshop"])
-            grafana_virtual_ip     = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),var.applications["grafana"])
+            juiceshop_virtual_ip   = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),index(var.applications,"juiceshop"))
+            grafana_virtual_ip     = element(flatten(data.aws_network_interface.bigip_public_nics[count.index].private_ips),index(var.applications,"grafana"))
             appserver_gateway_ip   = cidrhost(cidrsubnet(var.cidr,8,count.index + var.internal_subnet_offset),1)
             appserver_guest_ip     = module.dockerhost.private_ip[count.index]
             appserver_host_ip      = module.jumphost.private_ip[count.index]   # the ip address that the jumphost has on the public subnet
@@ -117,65 +117,3 @@ resource "null_resource" "transfer" {
   }
 }
 
-locals {
-  failover_tags = [
-    for app in keys(var.applications):
-    {
-      # tag required for failover extension support
-      # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
-      "${var.prefix}-${app}-failover-deployment-${random_id.id.hex}" =join(", ",[
-          for nic in data.aws_network_interface.bigip_public_nics:
-          element(nic.private_ips,var.applications[app])
-        ])
-    }    
-  ]
-
-
-
-  # js_failover_tag_label = "${var.prefix}-juiceshop-failover-deployment-${random_id.id.hex}"
-  # # tag required for failover extension support
-  # # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
-  # js_failover_tag_value = join(", ",[
-  #     for nic in data.aws_network_interface.bigip_public_nics:
-  #     element(nic.private_ips,var.applications["juiceshop"])
-  #   ])
-  # # tag required for failover extension support
-  # # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
-  # gf_failover_tag_label = "${var.prefix}-grafana-failover-deployment-${random_id.id.hex}"
-  # gf_failover_tag_value = join(", ",[
-  #     for nic in data.aws_network_interface.bigip_public_nics:
-  #     element(nic.private_ips,var.applications["grafana"])
-  #   ])
-
-  # js_tags = {
-  #   "${local.js_failover_tag_label}" = local.js_failover_tag_value
-  # }
-  # gf_tags = {
-  #   "${local.gf_failover_tag_label}" = local.gf_failover_tag_value
-  # }
-
-}
-
-resource "aws_eip" "juiceshop" {
-  count                     = length(var.azs)
-  vpc                       = true
-  network_interface         = "${data.aws_network_interface.bigip_public_nics[count.index].id}"
-  associate_with_private_ip = element(data.aws_network_interface.bigip_public_nics[count.index].private_ips,var.applications["juiceshop"])
-  tags = merge(local.failover_tags[var.applications["juiceshop"]],{ Name = format("%s-juiceshop-eip-%s-%s", var.prefix, random_id.id.hex,count.index)})
-}
-
-resource "aws_eip" "grafana" {
-  count                     = length(var.azs)
-  vpc                       = true
-  network_interface         = "${data.aws_network_interface.bigip_public_nics[count.index].id}"
-  associate_with_private_ip = element(data.aws_network_interface.bigip_public_nics[count.index].private_ips,var.applications["grafana"])
-  tags = {
-    Name                          = format("%s-grafana-eip-%s%s", var.prefix, random_id.id.hex,count.index)
-    # tag required for failover extension support
-    # https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#requirements
-    f5_cloud_failover_deployment  = join(", ",[
-      for nic in data.aws_network_interface.bigip_public_nics:
-      element(nic.private_ips,var.applications["grafana"])
-    ])
-  }
-}

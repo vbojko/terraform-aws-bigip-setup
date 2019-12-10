@@ -38,12 +38,12 @@ variable "internal_subnet_offset" {
   default = 20
 }
 variable "applications"{
-  type = "map"
-  default = {
-    management = 0
-    juiceshop  = 1
-    grafana    = 2
-  }
+  type = "list"
+  default = [
+    "management" ,
+    "juiceshop" ,
+    "grafana"  
+  ]
 }
 variable "ec2_key_name" {
 }
