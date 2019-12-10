@@ -3,20 +3,20 @@
     "environment": "aws",
     "externalStorage": {
         "scopingTags": {
-            "f5_cloud_failover_label": "${failover_label}"
+            ${failover_label}
         }
     },
     "failoverAddresses": {
         "scopingTags": {
-            "f5_cloud_failover_label": "${failover_label}"
+            ${failover_label}
         }
     },
     "failoverRoutes": {
         "scopingTags": {
-            "f5_cloud_failover_label": "${failover_label}"
+            ${failover_label}
         },
         "scopingAddressRanges": [
-            "${failover_scope}"
+            ${failover_scope}
         ]
     }
 }
