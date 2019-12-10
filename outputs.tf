@@ -34,29 +34,18 @@ output "ec2_key_name" {
 # }
 
 output "juiceshop_ip" {
-  value = aws_eip.application_eips[index(var.applications,"juiceshop")].public_ip
+  value = module.bigip.application_public_ips[index(var.applications,"juiceshop")]
 }
 
 output "grafana_ip" {
-  value = aws_eip.application_eips[index(var.applications,"grafana")].public_ip
+  value = module.bigip.application_public_ips[index(var.applications,"grafana")]
 }
 
 # output  "eips" {
 #   value = aws_eip.application_eips
 # }
 
-output "failover_declaration" {
-  value = templatefile(
-      "${path.module}/failover_declaration.json",
-      {
-        failover_scope = var.cidr,
-        failover_label = join(",\n ",[
-          for apptag in local.failover_tags:
-          "'f5_cloud_failover_label': '${apptag["f5_cloud_failover_label"]}'"
-        ]),
-      }
-      )
-}
+
 
 # output "tagsarray" {
 #   value = local.failover_tags
