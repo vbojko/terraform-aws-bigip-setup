@@ -41,10 +41,15 @@ output "application_public_ips"{
   value = aws_eip.application_eips[*].public_ip
 }
 
-# output "juiceshop_ip" {
-#   value = aws_eip.application_eips[index(var.applications,"juiceshop")].public_ip
-# }
-
-# output "grafana_ip" {
-#   value = aws_eip.application_eips[index(var.applications,"grafana")].public_ip
-# }
+output "failover_declaration" {
+    value = templatefile(
+        "${path.module}/failover_declaration.json",
+        {
+            failover_scope = var.failover_scope,
+            failover_label = join(",\n ",[
+            for apptag in local.failover_tags:
+            "'f5_cloud_failover_label': '${apptag["f5_cloud_failover_label"]}'"
+            ]),
+        }
+        )
+}

@@ -62,15 +62,3 @@ data "aws_network_interface" "bigip_public_nics" {
     id = module.bigip.public_nic_ids[count.index]
 }
 
-output "failover_declaration" {
-    value = templatefile(
-        "${path.module}/failover_declaration.json",
-        {
-            failover_scope = var.failover_scope,
-            failover_label = join(",\n ",[
-            for apptag in local.failover_tags:
-            "'f5_cloud_failover_label': '${apptag["f5_cloud_failover_label"]}'"
-            ]),
-        }
-        )
-}
