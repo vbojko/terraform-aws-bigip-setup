@@ -24,7 +24,7 @@ resource "aws_secretsmanager_secret_version" "bigip-pwd" {
 # Create the BIG-IP appliances
 #
 module "bigip" {
-  source = "./modules/failover"
+  source = "github.com/f5devcentral/terraform-aws-bigip//fail-over?ref=failover-extension"
 
   prefix = format(
     "%s-bigip-3-nic_with_new_vpc-%s",
