@@ -25,7 +25,7 @@ module "jumphost" {
 
   ami                         = data.aws_ami.latest-ubuntu.id
   associate_public_ip_address = true
-  instance_type               = "t2.xlarge"
+  instance_type               = var.ec2_ubuntu_type
   key_name                    = var.ec2_key_name
   monitoring                  = false
   vpc_security_group_ids      = [module.jumphost_sg.this_security_group_id]
@@ -113,7 +113,7 @@ resource "null_resource" "transfer" {
       user        = "ubuntu"
       private_key = file(var.ec2_key_file)
       host        = module.jumphost.public_ip[count.index]
-    }  
+    }
   }
 }
 

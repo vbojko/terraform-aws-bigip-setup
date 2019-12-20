@@ -37,9 +37,9 @@ module "bigip" {
   f5_ami_search_name              = "F5 BIGIP-15.* PAYG-Best 200Mbps*"
   f5_instance_count               = length(var.azs)
   ec2_key_name                    = var.ec2_key_name
-  ec2_instance_type               = "c4.xlarge"
+  ec2_instance_type               = var.ec2_bigip_type
   DO_URL                          = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm"
-  
+
   mgmt_subnet_security_group_ids  = [
     module.bigip_sg.this_security_group_id,
     module.bigip_mgmt_sg.this_security_group_id
