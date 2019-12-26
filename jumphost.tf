@@ -25,7 +25,7 @@ module "jumphost" {
 
   ami                         = data.aws_ami.latest-ubuntu.id
   associate_public_ip_address = true
-  instance_type               = "t2.xlarge"
+  instance_type               = var.ec2_ubuntu_type
   key_name                    = var.ec2_key_name
   monitoring                  = false
   vpc_security_group_ids      = [module.jumphost_sg.this_security_group_id]
@@ -113,7 +113,29 @@ resource "null_resource" "transfer" {
       user        = "ubuntu"
       private_key = file(var.ec2_key_file)
       host        = module.jumphost.public_ip[count.index]
-    }  
+    }
   }
 }
 
+
+
+resource "aws_eip" "juiceshop" {
+  count                     = length(var.azs)
+  vpc                       = true
+  network_interface         = "${data.aws_network_interface.bar[count.index].id}"
+  associate_with_private_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),1)
+  tags = {
+    Name = format("%s-juiceshop-eip-%s%s", var.prefix, random_id.id.hex,count.index)
+  }
+}
+
+resource "aws_eip" "grafana" {
+  count                     = length(var.azs)
+  vpc                       = true
+  network_interface         = "${data.aws_network_interface.bar[count.index].id}"
+  associate_with_private_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),2)
+  tags = {
+    Name = format("%s-grafana-eip-%s%s", var.prefix, random_id.id.hex,count.index)
+  }
+
+}
