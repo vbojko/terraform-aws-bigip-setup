@@ -8,7 +8,7 @@ You can choose to run this from your workstation or a container. Follow the inst
 
 # Using your workstation
 - install Terraform https://learn.hashicorp.com/terraform/getting-started/install.html
-- install inpsec https://www.inspec.io/downloads/
+- install inspec https://www.inspec.io/downloads/
 - install locust https://docs.locust.io/en/stable/installation.html
 - install jq https://stedolan.github.io/jq/download/
 - if on a Windows workstation, install Putty for scp support https://putty.org
