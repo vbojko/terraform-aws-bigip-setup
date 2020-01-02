@@ -25,20 +25,21 @@ resource "aws_secretsmanager_secret_version" "bigip-pwd" {
 #
 module "bigip" {
   source  = "f5devcentral/bigip/aws"
-  version = "0.1.3"
+  version = "0.1.4"
 
   prefix = format(
     "%s-bigip-3-nic_with_new_vpc-%s",
     var.prefix,
     random_id.id.hex
   )
-  aws_secretmanager_secret_id     = aws_secretsmanager_secret.bigip.id
-  application_endpoint_count      = 3
-  f5_ami_search_name              = "F5 BIGIP-15.* PAYG-Best 200Mbps*"
-  f5_instance_count               = length(var.azs)
-  ec2_key_name                    = var.ec2_key_name
-  ec2_instance_type               = var.ec2_bigip_type
-  DO_URL                          = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm"
+  aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id
+  application_endpoint_count  = 3
+  f5_ami_search_name          = "F5 BIGIP-15.* PAYG-Best 200Mbps*"
+  f5_instance_count           = length(var.azs)
+  ec2_key_name                = var.ec2_key_name
+  ec2_instance_type           = var.ec2_bigip_type
+  DO_URL                      = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm"
+  AS3_URL                     = "https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.16.0/f5-appsvcs-3.16.0-6.noarch.rpm"
 
   mgmt_subnet_security_group_ids  = [
     module.bigip_sg.this_security_group_id,
