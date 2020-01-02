@@ -25,7 +25,7 @@ resource "aws_secretsmanager_secret_version" "bigip-pwd" {
 #
 module "bigip" {
   source  = "f5devcentral/bigip/aws"
-  version = "0.1.3"
+  version = "0.1.4"
 
   prefix = format(
     "%s-bigip-3-nic_with_new_vpc-%s",
@@ -41,19 +41,16 @@ module "bigip" {
   DO_URL                          = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm"
 
   mgmt_subnet_security_group_ids  = [
-    module.bigip_sg.this_security_group_id,
     module.bigip_mgmt_sg.this_security_group_id
   ]
 
 
   public_subnet_security_group_ids = [
     module.bigip_sg.this_security_group_id,
-    module.bigip_mgmt_sg.this_security_group_id
   ]
 
   private_subnet_security_group_ids = [
     module.bigip_sg.this_security_group_id,
-    module.bigip_mgmt_sg.this_security_group_id
   ]
 
 
@@ -76,12 +73,7 @@ module "bigip_sg" {
   ingress_cidr_blocks = [var.allowed_app_cidr]
   ingress_rules       = ["http-80-tcp", "https-443-tcp"]
 
-  ingress_with_source_security_group_id = [
-    {
-      rule                     = "all-all"
-      source_security_group_id = module.bigip_sg.this_security_group_id
-    }
-  ]
+
 
   # Allow ec2 instances outbound Internet connectivity
   egress_cidr_blocks = ["0.0.0.0/0"]
@@ -101,12 +93,7 @@ module "bigip_mgmt_sg" {
   ingress_cidr_blocks = [var.allowed_mgmt_cidr]
   ingress_rules       = ["https-443-tcp", "https-8443-tcp", "ssh-tcp"]
 
-  ingress_with_source_security_group_id = [
-    {
-      rule                     = "all-all"
-      source_security_group_id = module.bigip_mgmt_sg.this_security_group_id
-    }
-  ]
+
 
   # Allow ec2 instances outbound Internet connectivity
   egress_cidr_blocks = ["0.0.0.0/0"]

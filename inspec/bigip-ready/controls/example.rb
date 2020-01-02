@@ -99,7 +99,7 @@ control "Telemetry Streaming Available" do
               params: {format: 'html'},
               method: 'GET',
               ssl_verify: false).body) do
-          its('version') { should eq '1.6.0' }
+          its('version') { should eq '1.8.0' }
           its('release') { should eq '1' } # this should be replaced with a test using the json resource
     end
   end
