@@ -66,71 +66,15 @@ module "dockerhost_sg" {
       cidr_blocks = var.cidr
     },
     {
-      from_port   = 3400
-      to_port     = 3400
-      protocol    = "tcp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 2003
-      to_port     = 2003
-      protocol    = "tcp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 2004
-      to_port     = 2004
-      protocol    = "tcp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 2023
-      to_port     = 2023
-      protocol    = "tcp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 2024
-      to_port     = 2024
-      protocol    = "tcp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
       from_port   = 8125
       to_port     = 8125
       protocol    = "udp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 8126
-      to_port     = 8126
-      protocol    = "tcp"
-      description = "graphite"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 8080
-      to_port     = 8080
-      protocol    = "tcp"
-      description = "graphite"
+      description = "statsd"
       cidr_blocks = var.cidr
     },
     {
       from_port   = 9200
       to_port     = 9200
-      protocol    = "tcp"
-      description = "elastic search"
-      cidr_blocks = var.cidr
-    },
-    {
-      from_port   = 9300
-      to_port     = 9300
       protocol    = "tcp"
       description = "elastic search"
       cidr_blocks = var.cidr
