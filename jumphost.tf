@@ -121,20 +121,34 @@ resource "null_resource" "transfer" {
 
 resource "aws_eip" "juiceshop" {
   count                     = length(var.azs)
+  # an occasional race condition with between creating the ElasticIP addresses 
+  # and the BIG-IP instances occurs causing the following error
+  # Error: Failure associating EIP: IncorrectInstanceState: The pending-instance-creation instance to which 'eni-xxxxxxxxxxxxxxxxx' is attached is not in a valid state for this operation
+  # https://github.com/terraform-providers/terraform-provider-aws/issues/6189
+  # the following depends_on is intended as a workaround for this condition
+  # if the error still occurs an additional 'terraform apply' completes the environment build
+  depends_on                = [module.bigip]
   vpc                       = true
   network_interface         = data.aws_network_interface.bar[count.index].id
   associate_with_private_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),1)
-  tags = {
+  tags                      = {
     Name = format("%s-juiceshop-eip-%s%s", var.prefix, random_id.id.hex,count.index)
   }
 }
 
 resource "aws_eip" "grafana" {
   count                     = length(var.azs)
+  # an occasional race condition with between creating the ElasticIP addresses 
+  # and the BIG-IP instances occurs causing the following error
+  # Error: Failure associating EIP: IncorrectInstanceState: The pending-instance-creation instance to which 'eni-xxxxxxxxxxxxxxxxx' is attached is not in a valid state for this operation
+  # https://github.com/terraform-providers/terraform-provider-aws/issues/6189
+  # the following depends_on is intended as a workaround for this condition
+  # if the error still occurs an additional 'terraform apply' completes the environment build
+  depends_on                = [module.bigip]
   vpc                       = true
   network_interface         = data.aws_network_interface.bar[count.index].id
   associate_with_private_ip = element(flatten(data.aws_network_interface.bar[count.index].private_ips),2)
-  tags = {
+  tags                      = {
     Name = format("%s-grafana-eip-%s%s", var.prefix, random_id.id.hex,count.index)
   }
 
