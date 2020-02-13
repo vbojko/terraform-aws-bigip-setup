@@ -14,7 +14,7 @@ variable "region" {
 }
 
 variable "azs" {
-  default = ["us-east-2a", "us-east-2b"]
+  default = ["us-east-2a"]
 }
 
 variable "ec2_bigip_type" {
@@ -24,24 +24,8 @@ variable "ec2_ubuntu_type" {
   default = "t2.xlarge"
 }
 
-## Europe (Stockholm)
-# variable "region" {
-#   default = "eu-north-1"
-# }
-#
-# variable "azs" {
-#   default = ["eu-north-1a", "eu-north-1b"]
-# }
-#
-# variable "ec2_bigip_type" {
-#   default = "c5.xlarge"
-# }
-# variable "ec2_ubuntu_type" {
-#   default = "t3.xlarge"
-# }
-
 variable "cidr" {
-  default = "10.50.0.0/16"
+  default = "10.70.0.0/16"
 }
 
 variable "allowed_mgmt_cidr" {
