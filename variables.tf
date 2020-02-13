@@ -49,9 +49,9 @@ variable "internal_subnet_offset" {
 }
 
 variable "ec2_key_name" {
-  default = VB-ag2020
+  default = "VB-ag2020"
 }
 
 variable "ec2_key_file" {
-  default = /home/ubuntu/VB-ag2020.pem
+  default = "/home/ubuntu/VB-ag2020.pem"
 }
