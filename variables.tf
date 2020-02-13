@@ -3,18 +3,18 @@ variable "AccessKeyID" {}
 variable "SecretAccessKey" {}
 
 variable "prefix" {
-  default = "tf-aws-bigip"
+  default = "ag2020"
 }
 ## Europe Regions need oder Jumphost and BigIP Instance Typs1
 ## Uncomment needed region below
 
-# US (Oregon)
+# US (Ohio)
 variable "region" {
-  default = "us-west-2"
+  default = "us-east-2"
 }
 
 variable "azs" {
-  default = ["us-west-2a", "us-west-2b"]
+  default = ["us-east-2a", "us-east-2b"]
 }
 
 variable "ec2_bigip_type" {
@@ -41,7 +41,7 @@ variable "ec2_ubuntu_type" {
 # }
 
 variable "cidr" {
-  default = "10.0.0.0/16"
+  default = "10.50.0.0/16"
 }
 
 variable "allowed_mgmt_cidr" {
