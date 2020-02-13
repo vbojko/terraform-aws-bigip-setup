@@ -35,7 +35,7 @@ module "bigip" {
   aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id
   application_endpoint_count  = 3
   f5_ami_search_name          = "F5 BIGIP-15.* PAYG-Best 200Mbps*"
-  f5_instance_count           = length(var.azs)
+  f5_instance_count           = 1
   ec2_key_name                = var.ec2_key_name
   ec2_instance_type           = var.ec2_bigip_type
   DO_URL                      = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm"

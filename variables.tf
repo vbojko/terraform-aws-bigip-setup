@@ -14,7 +14,7 @@ variable "region" {
 }
 
 variable "azs" {
-  default = ["us-east-2a"]
+  default = ["us-east-2a", "us-east-2b" ]
 }
 
 variable "ec2_bigip_type" {
