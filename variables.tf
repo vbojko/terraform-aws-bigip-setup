@@ -1,9 +1,9 @@
-variable "AccessKeyID" {}
+#variable "AccessKeyID" {}
 
-variable "SecretAccessKey" {}
+#variable "SecretAccessKey" {}
 
 variable "prefix" {
-  default = "ag2020"
+  default = "ag2020_3"
 }
 ## Europe Regions need oder Jumphost and BigIP Instance Typs1
 ## Uncomment needed region below
@@ -49,7 +49,9 @@ variable "internal_subnet_offset" {
 }
 
 variable "ec2_key_name" {
+  default = VB-ag2020
 }
 
 variable "ec2_key_file" {
+  default = /home/ubuntu/VB-ag2020.pem
 }

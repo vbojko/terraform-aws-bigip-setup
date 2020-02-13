@@ -11,7 +11,7 @@ all:
           ansible_become: true # determines if privilege escalation is used while issuing Ansible tasks on the Ubuntu server
           ansible_ssh_private_key_file: "~/${ec2_key_name}.pem" # path to private key file to use for ssh authentication
           add_ubuntu_interface: false # boolean to add an optional network interface (eth1) to the Ubuntu server using the NetPlan role
-          app_server_gateway: "${appserver_gateway_ip}" 
+          app_server_gateway: "${appserver_gateway_ip}"
 
     big_ips:
       hosts:
@@ -29,6 +29,6 @@ all:
           bigip_dns_search: "\"{{ bigip_domain }}\"" # internal DNS search domain
           bigip_external_self_ip: "${bigip_external_self_ip}/24" # the ip address of the BIG-IP's self-ip on the external subnet
           bigip_internal_self_ip: "${bigip_internal_self_ip}/24" # the ip address of the BIG-IP's self-ip on the internal subnet
-          juiceshop_virtual_address: "${juiceshop_virtual_ip}" # the ip address that will become the listener (virtual server) of the juice shop application
-          grafana_virtual_address: "${grafana_virtual_ip}" # the ip address that will become the listener (virtual server) of the grafana application
-          log_pool: "${log_pool}" # the ip address of the virtual server and looging pool that the LTM Request Policy and ASM Logs can target
+#          juiceshop_virtual_address: "${juiceshop_virtual_ip}" # the ip address that will become the listener (virtual server) of the juice shop application
+#          grafana_virtual_address: "${grafana_virtual_ip}" # the ip address that will become the listener (virtual server) of the grafana application
+#          log_pool: "${log_pool}" # the ip address of the virtual server and looging pool that the LTM Request Policy and ASM Logs can target

@@ -28,10 +28,10 @@ output "ec2_key_name" {
   value       = var.ec2_key_name
 }
 
-output "juiceshop_ip" {
-  value = aws_eip.juiceshop[*].public_ip
-}
+#output "juiceshop_ip" {
+#  value = aws_eip.juiceshop[*].public_ip
+#}
 
-output "grafana_ip" {
-  value = aws_eip.grafana[*].public_ip
-}
+#output "grafana_ip" {
+#  value = aws_eip.grafana[*].public_ip
+#}
