@@ -21,7 +21,7 @@ module "jumphost" {
   version = "~> 2.0"
 
   name           = format("%s-demo-jumphost-%s", var.prefix, random_id.id.hex)
-  instance_count = length(var.azs)
+  instance_count = 1
 
   ami                         = data.aws_ami.latest-ubuntu.id
   associate_public_ip_address = true

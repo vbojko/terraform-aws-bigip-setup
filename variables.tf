@@ -3,7 +3,7 @@
 #variable "SecretAccessKey" {}
 
 variable "prefix" {
-  default = "ag2020_3"
+  default = "ag2020_4"
 }
 ## Europe Regions need oder Jumphost and BigIP Instance Typs1
 ## Uncomment needed region below
